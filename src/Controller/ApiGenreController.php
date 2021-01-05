@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ApiGenreController extends AbstractController
 {
@@ -49,12 +50,19 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres", name="api_genres_create", methods={"POST"})
      */
-    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer)
+    public function create(Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data=$request->getContent();
         // $genre=new Genre();
         // $serializer->deserialize($data, Genre::class, 'json', ['object_to_populate'=>$genre]);
         $genre=$serializer->deserialize($data, Genre::class, 'json');
+
+        // gestion des erreurs de validation
+        $errors=$validator->validate($genre);
+        if(count($errors)){
+            $errorsJson=$serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
+        }
         $manager->persist($genre);
         $manager->flush();
 
@@ -72,10 +80,18 @@ class ApiGenreController extends AbstractController
     /**
      * @Route("/api/genres/{id}", name="api_genres_update", methods={"PUT"})
      */
-    public function edit(Genre $genre, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer)
+    public function edit(Genre $genre, Request $request, EntityManagerInterface $manager, SerializerInterface $serializer, ValidatorInterface $validator)
     {
         $data=$request->getContent();
         $serializer->deserialize($data, Genre::class, 'json', ['object_to_populate'=>$genre]);
+
+        // gestion des erreurs de validation
+        $errors=$validator->validate($genre);
+        if(count($errors)){
+            $errorsJson=$serializer->serialize($errors, 'json');
+            return new JsonResponse($errorsJson, Response::HTTP_BAD_REQUEST,[],true);
+        }
+
         $manager->persist($genre);
         $manager->flush();
 
