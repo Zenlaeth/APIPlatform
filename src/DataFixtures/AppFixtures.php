@@ -48,18 +48,28 @@ class AppFixtures extends Fixture
                         ->setAdresse($this->faker->streetAddress())
                         ->setTel($this->faker->phoneNumber())
                         ->setCodeCommune($commune[mt_rand(0,sizeof($commune)-1)])
-                        ->setMail(strtolower($adherent->getNom())."gmail.com")
+                        ->setMail(strtolower($adherent->getNom())."@gmail.com")
                         ->setPassword($this->passwordEncoder->encodePassword($adherent,$adherent->getNom()));
             $this->addReference("adherent".$i,$adherent);
             $this->manager->persist($adherent);
         }
-
-            $adherent=new Adherent();
-            $adherent   ->setNom("Oumar")
+            $adherentAdmin=new Adherent();
+            $rolesAdmin[]=Adherent::ROLE_ADMIN;
+            $adherentAdmin  ->setNom("Oumar")
                         ->setPrenom("Thierno")
                         ->setMail("admin@gmail.com")
-                        ->setPassword($this->passwordEncoder->encodePassword($adherent,$adherent->getNom()));
-            $this->manager->persist($adherent);
+                        ->setPassword($this->passwordEncoder->encodePassword($adherentAdmin,$adherentAdmin->getNom()))
+                        ->setRoles($rolesAdmin);
+            $this->manager->persist($adherentAdmin);
+
+            $adherentManager=new Adherent();
+            $rolesManager[]=Adherent::ROLE_MANAGER;
+            $adherentManager   ->setNom("Black")
+                        ->setPrenom("David")
+                        ->setMail("manager@gmail.com")
+                        ->setPassword($this->passwordEncoder->encodePassword($adherentManager,$adherentManager->getNom()))
+                        ->setRoles($rolesManager);
+            $this->manager->persist($adherentManager);
 
         $this->manager->flush();
     }

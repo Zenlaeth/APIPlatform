@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Livre;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\GenreRepository;
 use Doctrine\Common\Collections\Collection;
@@ -13,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\GenreRepository::class")
+ * @ORM\Entity(repositoryClass=GenreRepository::class)
  * @ApiResource(
  *      attributes={
  *          "order"= {

@@ -19,25 +19,58 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  * @ApiResource(
  *      attributes={
  *          "order"= {
- *              "titre":"ASC",
- *              "prix" : "DESC"
+ *              "titre":"ASC"
  *          }
+ *      },
+ *      collectionOperations={
+ *          "get"={
+ *              "method"="GET",
+ *              "path"="/livres",
+ *              "normalization_context"= {
+ *                  "groups"={"get_role_adherent"}
+ *              }
+ *          },
+ *          "post"={
+ *              "method"="POST",
+ *              "security"="is_granted('ROLE_MANAGER')",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
+ *          }
+ *      },
+ *      itemOperations={
+ *          "get"={
+ *              "method"="GET",
+ *              "path"="/livres/{id}", 
+ *              "normalization_context"= {
+ *                  "groups"={"get_role_adherent"}
+ *              }
+ *          },
+ *          "put"={
+ *              "method"="PUT",
+ *              "path"="/livres/{id}",
+ *              "security"="is_granted('ROLE_MANAGER')",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
+ *              "denormalization_context"= {
+ *                  "groups"={"put_manager"}
+ *              }
+ *          },
+ *          "delete"={
+ *              "method"="DELETE",
+ *              "path"="/admin/livres/{id}",
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
+ *          }
+ *          
  *      }
  * )
  * @ApiFilter(
  *      SearchFilter::class,
  *      properties={
  *          "titre": "ipartial",
- *          "auteur": "exact"
+ *          "auteur": "exact",
+ *          "genre": "exact"
  *      }
  * )
  * 
- * @ApiFilter(
- *      RangeFilter::class,
- *      properties={
- *          "prix"
- *      }
- * )
  * 
  * @ApiFilter(
  *      OrderFilter::class,
@@ -72,49 +105,58 @@ class Livre
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $isbn;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $titre;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"get_role_manager", "put_admin"})
      */
     private $prix;
 
     /**
      * @ORM\ManyToOne(targetEntity=Genre::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $genre;
 
     /**
      * @ORM\ManyToOne(targetEntity=Editeur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $editeur;
 
     /**
      * @ORM\ManyToOne(targetEntity=Auteur::class, inversedBy="livres")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $auteur;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $annee;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"get_role_adherent", "put_manager"})
      */
     private $langue;
 
     /**
      * @ORM\OneToMany(targetEntity=Pret::class, mappedBy="livre")
+     * @Groups({"get_role_manager"})
      */
     private $prets;
 
