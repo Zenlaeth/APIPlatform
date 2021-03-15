@@ -12,7 +12,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class PretSubscriber implements EventSubscriberInterface
 {
     private $token;
-
     public function __construct(TokenStorageInterface $token)
     {
         $this->token=$token;
@@ -20,17 +19,27 @@ class PretSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            KernelEvents::VIEW=>['getAuthenticatedUser', EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => ['getAuthenticatedUser', EventPriorities::PRE_WRITE]
         ];
     }
 
     public function getAuthenticatedUser(GetResponseForControllerResultEvent $event)
     {
         $entity = $event->getControllerResult(); // récupère l'entité qui a déclenché l'évènement
-        $method = $event->getRequest->getMethod(); // récupère la méthode invoqué dans la request
+        $method = $event->getRequest()->getMethod(); // récupère la méthode invoqué dans la request
         $adherent = $this->token->getToken()->getUser(); // récupère l'adhérent actuellement connecté qui a lancé la request
-        if ($entity instanceof Pret && $method == Request::METHOD_POST) { // s'il s'agit bien d'une opération POST sur l'entity Pret
-            $entity->setAdherent($adherent); // on écrit l'adhérent dans la propriété de l'entity Pret
+        if ($entity instanceof Pret){ 
+            if($method == Request::METHOD_POST) { 
+                $entity->setAdherent($adherent);
+            } elseif ($method == Request::METHOD_PUT){ 
+                if($entity->getDateRetourReelle() == null){
+                    $entity->getLivre()->setDispo(false);
+                }else{
+                    $entity->getLivre()->setDispo(true);
+                }
+            } elseif ($method == Request::METHOD_DELETE){
+                $entity->getLivre()->setDispo(true);      
+            }
         }
         return;
     }

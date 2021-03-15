@@ -7,6 +7,7 @@ use App\Entity\Adherent;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\PretRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
@@ -17,9 +18,22 @@ use ApiPlatform\Core\Annotation\ApiResource;
  *             "path"="/prets/{id}",
  *             "security"="(is_granted('ROLE_ADHERENT') and object.getAdherent() == user) or is_granted('ROLE_MANAGER')",
  *             "security_message"="Vous ne pouvez avoir accès qu'à vos propres prêts."
+ *          },
+ *          "put"={
+ *             "method"="PUT",
+ *             "path"="/prets/{id}",
+ *             "security"="(is_granted('ROLE_ADHERENT') and object.getAdherent() == user) or is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous ne pouvez avoir accès qu'à vos propres prêts."
+ *          },
+ *          "delete"={
+ *              "method"="DELETE",
+ *              "path"="/prets/{id}",
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
  *          }
  *      }
  * )
+ * @ORM\HasLifecycleCallbacks()
  */
 class Pret
 {
@@ -130,4 +144,14 @@ class Pret
 
         return $this;
     }
+
+    // /**
+    //  * @ORM\PrePersist
+    //  *
+    //  * @return void
+    //  */
+    // public function RendIndispoLivre()
+    // {
+    //     $this->getLivre()->setDispo(false);
+    // }
 }

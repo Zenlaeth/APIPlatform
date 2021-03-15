@@ -55,7 +55,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          },
  *          "delete"={
  *              "method"="DELETE",
- *              "path"="/admin/livres/{id}",
+ *              "path"="/livres/{id}",
  *              "security"="is_granted('ROLE_ADMIN')",
  *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
  *          }
@@ -159,6 +159,11 @@ class Livre
      * @Groups({"get_role_manager"})
      */
     private $prets;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $dispo;
 
     public function __construct()
     {
@@ -292,6 +297,18 @@ class Livre
                 $pret->setLivre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDispo(): ?bool
+    {
+        return $this->dispo;
+    }
+
+    public function setDispo(?bool $dispo): self
+    {
+        $this->dispo = $dispo;
 
         return $this;
     }
