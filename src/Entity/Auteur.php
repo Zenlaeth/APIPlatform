@@ -24,11 +24,13 @@ class Auteur
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get"})
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"get"})
      */
     private $prenom;
 
@@ -117,5 +119,29 @@ class Auteur
         }
 
         return $this;
+    }
+
+    /**
+     * Retourne le nombre de livres de l'auteur
+     * @Groups({"get"})
+     *
+     * @return integer
+     */
+    public function getNbLivres() : int
+    {
+        return $this->livres->count();
+    }
+
+    /**
+     * Retourne le nombre de livres disponibles de cet auteur
+     * @Groups({"get"})
+     * 
+     * @return integer
+     */
+    public function getNbLivresDispo() : int
+    {
+        return array_reduce($this->livres->toArray(), function($nb, $livre){
+            return $nb + ($livre->getDispo() == true ? 1: 0);
+        }, 0);
     }
 }

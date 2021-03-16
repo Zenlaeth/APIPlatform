@@ -34,6 +34,11 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *              "method"="POST",
  *              "security"="is_granted('ROLE_MANAGER')",
  *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
+ *          },
+ *          "meilleurslivres"={
+ *              "method"="GET",
+ *              "route_name"="meilleurslivres",
+ *              "controller"=StatsController::class
  *          }
  *      },
  *      itemOperations={

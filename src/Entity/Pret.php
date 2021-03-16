@@ -12,6 +12,14 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 /**
  * @ORM\Entity(repositoryClass=PretRepository::class)
  * @ApiResource(
+ *      collectionOperations={
+ *          "get"={
+ *             "method"="GET",
+ *             "path"="/prets",
+ *             "security"="is_granted('ROLE_MANAGER')",
+ *             "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
+ *          }
+ *      },
  *      itemOperations={
  *          "get"={
  *             "method"="GET",
