@@ -41,7 +41,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "get"={
  *              "method"="GET",
  *              "normalization_context"= {
- *                  "groups"={"get_role_adherent"}
+ *                  "groups"={"get_auteur_role_adherent"}
  *              }
  *          },
  *          "put"={
@@ -95,7 +95,7 @@ class Auteur
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"get_auteur_role_adherent", "put_role_manager"})
      */
-    private $Relation;
+    private $nationalite;
 
     /**
      * @ORM\OneToMany(targetEntity=Livre::class, mappedBy="auteur")
@@ -137,14 +137,14 @@ class Auteur
         return $this;
     }
 
-    public function getRelation(): ?Nationalite
+    public function getNationalite(): ?Nationalite
     {
-        return $this->Relation;
+        return $this->nationalite;
     }
 
-    public function setRelation(?Nationalite $Relation): self
+    public function setNationalite(?Nationalite $nationalite): self
     {
-        $this->Relation = $Relation;
+        $this->$nationalite = $$nationalite;
 
         return $this;
     }
