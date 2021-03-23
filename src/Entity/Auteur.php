@@ -9,17 +9,18 @@ use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
  * @ApiResource(
  *  attributes=
  *      {
- *      "order"= {"nom":"ASC},
+ *      "order"= {"nom":"ASC"},
  *      "pagination_enabled"=false
  *      },
  *  collectionOperations={
- *      "get"=:{
+ *      "get"={
  *          "method"="GET",
  *          "normalization_context"=
  *              {
@@ -29,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *      "post"={
  *          "method"="POST",
  *          "security"="is_granted('ROLE_ADMIN')",
- *          "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
+ *          "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
  *          "denormalization_context"= 
  *          {
  *                  "groups"={"put_manager"}
@@ -56,9 +57,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "security"="is_granted('ROLE_ADMIN')",
  *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
  *          }
- *          
- *      }
- * 
  * }
  * )
  * @ApiFilter(
