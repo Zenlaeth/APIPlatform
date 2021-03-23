@@ -22,6 +22,9 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "get"={
  *             "method"="GET",
  *             "path"="/adherents",
+ *             "normalization_context"= {
+ *                  "groups"={"get_role_adherent"}
+ *              }
  *          },
  *          "post"={
  *              "method"="POST",
