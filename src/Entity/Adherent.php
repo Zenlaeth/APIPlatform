@@ -5,12 +5,14 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\StatsController;
 use App\Repository\AdherentRepository;
+use ApiPlatform\Core\Annotation\ApiFilter;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -20,8 +22,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *          "get"={
  *             "method"="GET",
  *             "path"="/adherents",
- *             "security"="is_granted('ROLE_MANAGER')",
- *             "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
  *          },
  *          "post"={
  *              "method"="POST",
@@ -71,6 +71,13 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @UniqueEntity(
  *      fields={"mail"},
  *      message="Il existe déjà un mail {{ value }}, veuillez saisir un autre mail"
+ * )
+ * 
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "mail": "exact"
+ *      }
  * )
  */
 class Adherent implements UserInterface

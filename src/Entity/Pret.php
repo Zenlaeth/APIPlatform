@@ -18,7 +18,13 @@ use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
  *             "path"="/prets",
  *             "security"="is_granted('ROLE_MANAGER')",
  *             "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
+ *          },
+ *          "post"={
+ *              "method"="POST",
+ *              "security"="is_granted('ROLE_MANAGER')",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource"
  *          }
+ * 
  *      },
  *      itemOperations={
  *          "get"={
