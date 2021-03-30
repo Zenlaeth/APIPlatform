@@ -14,11 +14,54 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass=NationaliteRepository::class)
  * @ApiResource(
- *      attributes={
- *          "order"= {
- *              "libelle":"ASC"
+ *  attributes=
+ *      {
+ *      "order"= {"libelle":"ASC"}
+ *      },
+ *  collectionOperations={
+ *      "get"={
+ *          "method"="GET",
+ *          "path"="/nationalites",
+ *          "normalization_context"=
+ *              {
+ *                  "groups"={"get_auteur_role_adherent"}
+ *              }
+ *      },
+ *      "post"={
+ *          "method"="POST",
+ *          "path"="/nationalites",
+ *          "security"="is_granted('ROLE_ADMIN')",
+ *          "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
+ *          "denormalization_context"= 
+ *          {
+ *                  "groups"={"put_manager"}
  *          }
  *      }
+ *  },
+ *   itemOperations={
+ *          "get"={
+ *              "method"="GET",
+ *              "path"="/nationalites/{id}",
+ *              "normalization_context"= {
+ *                  "groups"={"get_auteur_role_adherent"}
+ *              }
+ *          },
+ *          "put"={
+ *              "method"="PUT",
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "path"="/nationalites/{id}",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
+ *              "denormalization_context"= {
+ *                  "groups"={"put_role_manager"}
+ *              }
+ *          },
+ *          "delete"={
+ *              "method"="DELETE",
+ *              "security"="is_granted('ROLE_ADMIN')",
+ *              "path"="/nationalites/{id}",
+ *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
+ *          }
+ * }
  * )
  * @ApiFilter(
  *      SearchFilter::class,

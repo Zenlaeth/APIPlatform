@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Nationalite;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\AuteurRepository;
 use ApiPlatform\Core\Annotation\ApiFilter;
@@ -14,14 +15,14 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 /**
  * @ORM\Entity(repositoryClass=AuteurRepository::class)
  * @ApiResource(
- *  attributes=
- *      {
+ *  attributes={
  *      "order"= {"nom":"ASC"},
  *      "pagination_enabled"=false
- *      },
+ *  },
  *  collectionOperations={
  *      "get"={
  *          "method"="GET",
+ *          "path"="/auteurs",
  *          "normalization_context"=
  *              {
  *                  "groups"={"get_auteur_role_adherent"}
@@ -33,19 +34,21 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *          "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
  *          "denormalization_context"= 
  *          {
- *                  "groups"={"put_manager"}
+ *              "groups"={"put_role_manager"}
  *          }
  *      }
  *  },
  *   itemOperations={
  *          "get"={
  *              "method"="GET",
+ *              "path"="/auteurs/{id}", 
  *              "normalization_context"= {
  *                  "groups"={"get_auteur_role_adherent"}
  *              }
  *          },
  *          "put"={
  *              "method"="PUT",
+ *              "path"="/auteurs/{id}",
  *              "security"="is_granted('ROLE_ADMIN')",
  *              "security_message"="Vous n'avez pas les droits d'acceder à cette ressource",
  *              "denormalization_context"= {
@@ -63,7 +66,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
  *      SearchFilter::class,
  *      properties={
  *          "nom": "ipartial",
- *          "prenom": "exact",
+ *          "prenom": "ipartial",
  *          "nationalite": "exact"
  *      }
  * )
@@ -74,7 +77,7 @@ class Auteur
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"get_auteur_role_adherent"})
+     * @Groups({"get_auteur_role_adherent", "put_role_manager"})
      */
     private $id;
 
@@ -144,7 +147,7 @@ class Auteur
 
     public function setNationalite(?Nationalite $nationalite): self
     {
-        $this->$nationalite = $$nationalite;
+        $this->nationalite = $nationalite;
 
         return $this;
     }
